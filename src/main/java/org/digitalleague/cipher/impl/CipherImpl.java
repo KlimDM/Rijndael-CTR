@@ -65,6 +65,9 @@ public class CipherImpl implements Cipher {
     }
 
     private byte[] removePadding(byte[] cipherText) {
+        if (cipherText.length == 0) {
+            return cipherText;
+        }
         int paddingSize = cipherText[cipherText.length - 1];
         if (paddingSize < 1 || paddingSize > DEFAULT_BLOCK_SIZE || paddingSize > cipherText.length) {
             return cipherText;
