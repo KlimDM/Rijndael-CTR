@@ -66,6 +66,18 @@ public class CipherImplTest {
     }
 
     @Test
+    public void testDecryptInvalidCipherText() {
+
+        byte[] cipherText = new byte[] {
+          0x00, 0x11, 0x12, 0x13, 0x14, 0x16, 0x19
+        };
+
+        cipher = CipherImpl.createInstance(key128);
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cipher.decrypt(cipherText));
+    }
+
+    @Test
     public void testOnInvalidKey() {
         byte[] invalidKey = new byte[] {
                 0x01, 0x03, 0x06, 0x70,

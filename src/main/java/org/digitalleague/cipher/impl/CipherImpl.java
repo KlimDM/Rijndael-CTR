@@ -44,6 +44,10 @@ public class CipherImpl implements Cipher {
     public byte[] decrypt(byte[] cipherText) {
         byte[] result = new byte[cipherText.length];
 
+        if (cipherText.length % 16 != 0) {
+            throw new IllegalArgumentException("expected cipherText length as multiplication of 16, but got " + cipherText.length);
+        }
+
         for (int i = 0; i < cipherText.length; i += DEFAULT_BLOCK_SIZE) {
             byte[] block = Arrays.copyOfRange(cipherText, i, i + DEFAULT_BLOCK_SIZE);
             byte[] cipherBlock = this.cipher.decryptBlock(block, roundKeys);
