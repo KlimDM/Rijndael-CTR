@@ -2,6 +2,11 @@ package org.digitalleague.key;
 
 import org.digitalleague.cipher.util.SBox;
 
+/**
+ * Класс для генерации расписания ключей.
+ * Число ключей в расписании ключей зависит от размера исходного ключа (128, 192, 256 бит).
+ * Алгоритм генерации описан в спецификации, там же описана таблица Rcon.
+ */
 public class KeySchedule {
 
     private final static byte[][] Rcon = new byte[][] {
@@ -20,12 +25,19 @@ public class KeySchedule {
             new byte[] {(byte)0xab, 0x00, 0x00, 0x00},
             new byte[] {0x4d, 0x00, 0x00, 0x00},
     };
+
+    /**
+     * Генерация расписания ключей из начального ключа.
+     * @param key
+     * @return
+     */
     public byte[][] keyExpansion(byte[] key) {
         int Nk = key.length / 4; // Количество слов в ключе
         int Nr = Nk + 6; // Число раундов шифрования
         int Nb = 4;
-        byte[][] roundKeys = new byte[Nb * (Nr + 1)][4]; // Размер массива, который будет содержать все раундовые ключи
+        byte[][] roundKeys = new byte[Nb * (Nr + 1)][4]; // Итоговый массив, который будет содержать все раундовые ключи
 
+        // Добавление начальных ключевых байтов в расписание ключей
         for (int i = 0; i < Nk; i++) {
             roundKeys[i] = new byte[] {key[4 * i], key[4 * i + 1], key[4 * i + 2], key[4 * i + 3]};
         }

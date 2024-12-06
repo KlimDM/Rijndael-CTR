@@ -6,6 +6,10 @@ import org.digitalleague.util.Utils;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
+/**
+ * Режимы работа шифра (в разработке)
+ */
+//TODO
 @Slf4j
 public class CTRMode {
 

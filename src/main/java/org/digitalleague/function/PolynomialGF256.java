@@ -1,10 +1,9 @@
 package org.digitalleague.function;
 
 /**
- * Реализация основных операций над полем Гаула 2^8
+ * Реализация основных операций над полем Гаула 2^8,
  */
 public class PolynomialGF256 {
-
     public static final int[] LOGTABLE = {
             0, 0, 25, 1, 50, 2, 26, 198, 75, 199, 27, 104, 51, 238, 223, 3,
             100, 4, 224, 14, 52, 141, 129, 239, 76, 113, 8, 200, 248, 105, 28, 193,
@@ -43,7 +42,7 @@ public class PolynomialGF256 {
             57,  75, 221, 124, 132, 151, 162, 253,  28,  36, 108, 180, 199,  82, 246,   1,
     };
 
-    /* x^8 + x^4 + x^3 + x + 1
+    /** x^8 + x^4 + x^3 + x + 1
      * Неприводимый многочлен над полем GF(2^8) для определения операции умножения
      */
     private static final int IRREDUCIBLE_POLYNOMIAL = 0x11b;
@@ -52,6 +51,14 @@ public class PolynomialGF256 {
         return (byte)(poly1 ^ poly2);
     }
 
+    /**
+     * Алгоритм выполнения умножения двух полиномов над полем GF(256). Основан умножении полинома на x, как на побитовом
+     * сдвиге полинома влево. Для обеспечения конечности множества произведений всех полиномов над полем, результат приводится
+     * по модулю неприводимого многочлена.
+     * @param poly1
+     * @param poly2
+     * @return - multiplication - результат умножения
+     */
     public static byte multiply(byte poly1, byte poly2) {
         byte product = 0;
         byte leftmost_bit;
@@ -73,6 +80,12 @@ public class PolynomialGF256 {
     }
 
 
+    /**
+     * Альтернативая реализация умножения с помощью таблиц логарифмов и антилогарифмов байтов.
+     * @param poly1
+     * @param poly2
+     * @return - multiplication - результат умножения
+     */
     public static byte multiplyWithTables(byte poly1, byte poly2) {
         if (poly1 != 0 && poly2 != 0) {
             return (byte) ALOGTABLE[(LOGTABLE[poly1 & 0xFF] + LOGTABLE[poly2 & 0xFF]) % 255];
@@ -81,6 +94,12 @@ public class PolynomialGF256 {
         }
     }
 
+    /**
+     * Возведение полинома в степень
+     * @param poly - полином
+     * @param degree - целочисленная степень
+     * @return - result - результат
+     */
     public static byte pow(byte poly, int degree) {
         byte result = poly;
         if (degree == 0) {
@@ -91,8 +110,4 @@ public class PolynomialGF256 {
         }
         return poly;
     }
-
-//    public static byte reverse(byte poly) {
-//        return 0;
-//    }
 }

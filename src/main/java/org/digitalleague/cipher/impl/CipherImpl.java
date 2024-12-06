@@ -6,10 +6,12 @@ import org.digitalleague.key.KeySchedule;
 
 import java.util.Arrays;
 
+/**
+ * Класс для непосредственного шифрования произвольного массива байтов.
+ */
 public class CipherImpl implements Cipher {
     private static final int DEFAULT_BLOCK_SIZE = 16;
     private static final KeySchedule keySchedule = new KeySchedule();
-
     private final byte[][] roundKeys;
     private final BaseCipher cipher;
 
@@ -27,6 +29,13 @@ public class CipherImpl implements Cipher {
         return new CipherImpl(key);
     }
 
+    /**
+     * Основной метод библиотеки. Разделяет полученные байты по блокам и выполняет шифрование,
+     * дополняя последний блок при необходимости.
+     * @param plainText - массив байтов любого размера (пустой список не шифруется, этот случай должен
+     *                    обрабатываться в вызывающей программе в зависимости от требований)
+     * @return cipherText - открытый текст (список зашифрованных байтов), который можно передавать раздельно от ключа
+     */
     public byte[] encrypt(byte[] plainText) {
         byte[] paddedPlainText = this.addPadding(plainText);
         byte[] result = new byte[paddedPlainText.length];
@@ -40,7 +49,12 @@ public class CipherImpl implements Cipher {
     }
 
 
-
+    /**
+     * Основной метод библиотеки. Разделяет полученные байты по блокам и выполняет шифрование,
+     * дополняя последний блок при необходимости.
+     * @param cipherText - массив байтов размера, кратного размеру блока
+     * @return plainText - дешифрованное сообщение (в формате массива байтов, кодировка должна обрабатываться в вызывабщей программе
+     */
     public byte[] decrypt(byte[] cipherText) {
         byte[] result = new byte[cipherText.length];
 
@@ -57,6 +71,11 @@ public class CipherImpl implements Cipher {
         return removePadding(result);
     }
 
+    /**
+     * Padding (дополнение) блоков исходного текста. Выполняется в соответствии с PKCS#7-алгоритмом
+     * @param plainText
+     * @return
+     */
     private byte[] addPadding(byte[] plainText) {
         if (plainText.length % DEFAULT_BLOCK_SIZE == 0) {
             return plainText;
@@ -68,6 +87,11 @@ public class CipherImpl implements Cipher {
         return paddedPlainText;
     }
 
+    /**
+     * Удаление возможного Padding (Дополнения) после дешифровки декста
+     * @param cipherText
+     * @return
+     */
     private byte[] removePadding(byte[] cipherText) {
         if (cipherText.length == 0) {
             return cipherText;
